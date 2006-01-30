@@ -110,7 +110,14 @@ IsotropicResolutionImageFilter<TInputImage, TOutputImage, TInterpolatorPrecision
   // output size
   for( int i=0; i < InputImageDimension; i++)
     {
-      outputSize[i] = static_cast<unsigned long>( inputSize[i] * inputSpacing[i] / isoSpacing[i] );
+      if( inputSpacing[i] == isoSpacing[i] )
+        {
+        outputSize[i] = inputSize[i];
+        }
+      else
+        {
+        outputSize[i] = static_cast<unsigned long>( (inputSize[i] - 1) * inputSpacing[i] / isoSpacing[i] + 1);
+        }
     }
   
   outputPtr->SetLargestPossibleRegion( outputSize );
