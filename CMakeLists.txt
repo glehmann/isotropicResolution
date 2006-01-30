@@ -69,5 +69,31 @@ TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 #any tests you can comment out or delete the following line.
 # ADD_TEST(Testname ExecutableToRun arg1 arg2 arg3)
 
-ADD_TEST(Run check ${INPUT_IMAGE} out.png)
-ADD_TEST(CompareImage ${IMAGE_COMPARE} out.png ${CMAKE_SOURCE_DIR}/images/test.png)
+
+ADD_TEST(Run_0.5_0 check 0.5 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_0.5_0.img)
+ADD_TEST(CompareImage_0.5_0 ${IMAGE_COMPARE} cthead1_0.5_0.img ${CMAKE_SOURCE_DIR}/images/cthead1_0.5_0.img)
+
+ADD_TEST(Run_1_0 check 1 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_1_0.img)
+ADD_TEST(CompareImage_1_0 ${IMAGE_COMPARE} cthead1_1_0.img ${CMAKE_SOURCE_DIR}/images/cthead1_1_0.img)
+
+ADD_TEST(Run_2_0 check 2 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_2_0.img)
+ADD_TEST(CompareImage_2_0 ${IMAGE_COMPARE} cthead1_2_0.img ${CMAKE_SOURCE_DIR}/images/cthead1_2_0.img)
+
+ADD_TEST(Run_0_0 check 0 0 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_0_0.img)
+ADD_TEST(CompareImage_0_0 ${IMAGE_COMPARE} cthead1_0_0.img ${CMAKE_SOURCE_DIR}/images/cthead1_0_0.img)
+
+
+ADD_TEST(Run_0.5_1 check 0.5 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_0.5_1.img)
+ADD_TEST(CompareImage_0.5_1 ${IMAGE_COMPARE} cthead1_0.5_1.img ${CMAKE_SOURCE_DIR}/images/cthead1_0.5_1.img)
+
+ADD_TEST(Run_1_1 check 1 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_1_1.img)
+ADD_TEST(CompareImage_1_1 ${IMAGE_COMPARE} cthead1_1_1.img ${CMAKE_SOURCE_DIR}/images/cthead1_1_1.img)
+
+ADD_TEST(Run_2_1 check 2 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_2_1.img)
+ADD_TEST(CompareImage_2_1 ${IMAGE_COMPARE} cthead1_2_1.img ${CMAKE_SOURCE_DIR}/images/cthead1_2_1.img)
+
+ADD_TEST(Run_0_1 check 0 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_0_1.img)
+ADD_TEST(CompareImage_0_1 ${IMAGE_COMPARE} cthead1_0_1.img ${CMAKE_SOURCE_DIR}/images/cthead1_0_1.img)
+
+
+
