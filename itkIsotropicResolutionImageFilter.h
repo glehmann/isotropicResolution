@@ -47,8 +47,8 @@ namespace itk
  * Note that the choice of interpolator function can be important.
  * This function is set via SetNearestNeighbor().  The default is
  * false, which mean a itk::LinearInterpolateImageFunction<InputImageType,
- * TInterpolatorPrecisionType> will be used and that axe which are loosing
- * pixels will be smooth with a itk::RecursiveGaussianImageFilter. SetNearestNeighbor(false)
+ * TInterpolatorPrecisionType> is used and that axe which are loosing
+ * pixels are smooth with a itk::RecursiveGaussianImageFilter. SetNearestNeighbor(false)
  * is reasonable for ordinary medical images.  However, some synthetic
  * images have pixels drawn from a finite prescribed set.  An example
  * would be a mask indicating the segmentation of a brain into a small
@@ -56,6 +56,8 @@ namespace itk
  * interpolate between different pixel values, and so SetNearestNeighbor(true)
  * should be used. In that case, a itk::NearestNeighborInterpolateImageFunction< InputImageType,
  * TInterpolatorPrecisionType > is used internally and no smoothing is done.
+ *
+ * \author Gaëtan Lehmann. Biologie du Développement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \sa ResampleImageFilter
  */
@@ -97,7 +99,10 @@ public:
   typedef typename OutputImageType::RegionType OutputImageRegionType;
   typedef typename InputImageType::SizeType InputSizeType;
 
-  /** */
+  /** Set/Get wether the interpolator must be a nearest neighbor or not.
+   * If false, the interpolator is a linear interpolator.
+   * Default is false.
+   */
   itkSetMacro(NearestNeighbor, bool);
   itkGetConstReferenceMacro(NearestNeighbor, bool);
   itkBooleanMacro(NearestNeighbor);
