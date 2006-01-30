@@ -61,6 +61,10 @@ SET(CurrentExe "check")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "check3D")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 #the following line is an example of how to add a test to your project.
 #Testname is the title for this particular test.  ExecutableToRun is the
 #program which will be running this test.  It can either be a part of this
@@ -96,4 +100,30 @@ ADD_TEST(Run_0_1 check 0 1 ${CMAKE_SOURCE_DIR}/images/cthead1.png cthead1_0_1.im
 ADD_TEST(CompareImage_0_1 ${IMAGE_COMPARE} cthead1_0_1.img ${CMAKE_SOURCE_DIR}/images/cthead1_0_1.img)
 
 
+
+
+ADD_TEST(Run3D_0.5_0 check3D 0.5 0 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_0.5_0.img)
+ADD_TEST(CompareImage3D_0.5_0 ${IMAGE_COMPARE} ESCells_0.5_0.img ${CMAKE_SOURCE_DIR}/images/ESCells_0.5_0.img)
+
+ADD_TEST(Run3D_1_0 check3D 1 0 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_1_0.img)
+ADD_TEST(CompareImage3D_1_0 ${IMAGE_COMPARE} ESCells_1_0.img ${CMAKE_SOURCE_DIR}/images/ESCells_1_0.img)
+
+ADD_TEST(Run3D_2_0 check3D 2 0 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_2_0.img)
+ADD_TEST(CompareImage3D_2_0 ${IMAGE_COMPARE} ESCells_2_0.img ${CMAKE_SOURCE_DIR}/images/ESCells_2_0.img)
+
+ADD_TEST(Run3D_0_0 check3D 0 0 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_0_0.img)
+ADD_TEST(CompareImage3D_0_0 ${IMAGE_COMPARE} ESCells_0_0.img ${CMAKE_SOURCE_DIR}/images/ESCells_0_0.img)
+
+
+ADD_TEST(Run3D_0.5_1 check3D 0.5 1 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_0.5_1.img)
+ADD_TEST(CompareImage3D_0.5_1 ${IMAGE_COMPARE} ESCells_0.5_1.img ${CMAKE_SOURCE_DIR}/images/ESCells_0.5_1.img)
+
+ADD_TEST(Run3D_1_1 check3D 1 1 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_1_1.img)
+ADD_TEST(CompareImage3D_1_1 ${IMAGE_COMPARE} ESCells_1_1.img ${CMAKE_SOURCE_DIR}/images/ESCells_1_1.img)
+
+ADD_TEST(Run3D_2_1 check3D 2 1 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_2_1.img)
+ADD_TEST(CompareImage3D_2_1 ${IMAGE_COMPARE} ESCells_2_1.img ${CMAKE_SOURCE_DIR}/images/ESCells_2_1.img)
+
+ADD_TEST(Run3D_0_1 check3D 0 1 ${CMAKE_SOURCE_DIR}/images/ESCells.img ESCells_0_1.img)
+ADD_TEST(CompareImage3D_0_1 ${IMAGE_COMPARE} ESCells_0_1.img ${CMAKE_SOURCE_DIR}/images/ESCells_0_1.img)
 
