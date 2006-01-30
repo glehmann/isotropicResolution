@@ -29,7 +29,7 @@ namespace itk
 {
 /**
  * \class IsotropicResolutionImageFilter
- * \brief Grow input image to create a new image with isotropic resolution
+ * \brief Grow or shrink the input image to create a new image with isotropic resolution
  *
  * IsotropicResolutionImageFilter is a convenient filter to get a image with isotropic
  * resolution from an image with anisotropic resolution. It increase the size of the
@@ -45,15 +45,17 @@ namespace itk
  * keep an isotropic resolution on output image.
  * 
  * Note that the choice of interpolator function can be important.
- * This function is set via SetInterpolator().  The default is
- * itk::LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>, which
+ * This function is set via SetNearestNeighbor().  The default is
+ * false, which mean a itk::LinearInterpolateImageFunction<InputImageType,
+ * TInterpolatorPrecisionType> will be used and that axe which are loosing
+ * pixels will be smooth with a itk::RecursiveGaussianImageFilter. SetNearestNeighbor(false)
  * is reasonable for ordinary medical images.  However, some synthetic
  * images have pixels drawn from a finite prescribed set.  An example
  * would be a mask indicating the segmentation of a brain into a small
  * number of tissue types.  For such an image, one does not want to
- * interpolate between different pixel values, and so
- * itk::NearestNeighborInterpolateImageFunction< InputImageType,
- * TInterpolatorPrecisionType > would be a better choice.
+ * interpolate between different pixel values, and so SetNearestNeighbor(true)
+ * should be used. In that case, a itk::NearestNeighborInterpolateImageFunction< InputImageType,
+ * TInterpolatorPrecisionType > is used internally and no smoothing is done.
  *
  * \sa ResampleImageFilter
  */
