@@ -33,16 +33,16 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 % The title should be descriptive enough for people to be able to find
 % the relevant document. 
-\title{}
+\title{Easily resample anisotropic image to make it isotropic}
 
 % Increment the release number whenever significant changes are made.
 % The author and/or editor can define 'significant' however they like.
-\release{0.00}
+% \release{0.00}
 
 % At minimum, give your name and an email address.  You can include a
 % snail-mail address if you like.
-\author{}
-\authoraddress{}
+\author{Ga\"etan Lehmann}
+\authoraddress{Unit\'e de Biologie du D\'eveloppement et de la Reproduction, Institut National de la Recherche Agronomique, 78350 Jouy-en-Josas, France}
 
 \begin{document}
 \maketitle
@@ -54,12 +54,24 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 \begin{abstract}
 \noindent
-% The abstract should be a paragraph or two long, and describe the
-% scope of the document.
+Anisotropic images are quite common, and are often difficult to manipulate. The filter proposed here make it simple to transform an anisotropic image in an isotropic one.
 \end{abstract}
 
-\tableofcontents
+% \tableofcontents
 
+\section{Introduction}
+
+Even if the 3D imaging is more and more common, lots of images still have anisotropic resolution. With confocal microscopy for example, the resolution is still lower on the axe z than on the axes x and y.
+
+The filter proposed here let the user easily produce a isotropic image from an anisotropic one, while some options let him choose which method to use, and limit the size of the output image.
+
+\section{Implementation}
+
+IsotropicResolutionImageFilter is built as a sequence of filters. Everything done is fully feasible without those filter - IsotropicResolutionImageFilter is just there to make easily set up the resample, and to make integration in a pipeline easier.
+
+The by default, the filter will use linear interpolation to compute the new pixels, and will smooth the image with a gaussian filter if the number of pixel is decrease on an axe to avoid aliasing effects. This is well described in the ITK Software Guide, chapter 6.9\cite{ITKSoftwareGuide}~\footnote{However, contrary to what is said in the ITK Software Guide, you shouldn't feel so guilty to resample your anisotropic images. Yes, sometime, it's just the best thing to do.}.
+
+The user can also choose to use only the nearest neighbors. This method should be used with synthetics images, to avoid introducing new labels for example.
 
 % \url{http://www.itk.org}
 % \code{Insight/Documentation/Style.pdf}
@@ -80,11 +92,11 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 % \ref{cthead1}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics{cthead1}
-\caption{The input image.\label{cthead1}}
-\end{figure}
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics{cthead1}
+% \caption{The input image.\label{cthead1}}
+% \end{figure}
 
 
 \appendix

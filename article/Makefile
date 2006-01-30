@@ -1,6 +1,6 @@
 
 # you should use the title of the article instead
-ARTICLE_TITLE = A Great Article For The Insight Journal
+ARTICLE_TITLE = Easily resample anisotropic image to make it isotropic
 
 # spaces are not allowed
 empty:=
