@@ -67,36 +67,57 @@ The filter proposed here let the user easily produce a isotropic image from an a
 
 \section{Implementation}
 
-IsotropicResolutionImageFilter is built as a sequence of filters. Everything done is fully feasible without those filter - IsotropicResolutionImageFilter is just there to make easily set up the resample, and to make integration in a pipeline easier.
+IsotropicResolutionImageFilter is built as a sequence of filters. Everything done is fully feasible without this filter - IsotropicResolutionImageFilter is just there to make the configuration of ResampleImageFilter easier, and to make the integration in a pipeline easier.
 
-The by default, the filter will use linear interpolation to compute the new pixels, and will smooth the image with a gaussian filter if the number of pixel is decrease on an axe to avoid aliasing effects. This is well described in the ITK Software Guide, chapter 6.9\cite{ITKSoftwareGuide}~\footnote{However, contrary to what is said in the ITK Software Guide, you shouldn't feel so guilty to resample your anisotropic images. Yes, sometime, it's just the best thing to do.}.
+The by default, the filter will use linear interpolation to compute the new pixels, and will smooth the image with a gaussian filter if the number of pixel is decrease on an axe to avoid aliasing effects. This is well described in the ITK Software Guide, chapter 6.9~\cite{ITKSoftwareGuide}~\footnote{However, contrary to what is said in the ITK Software Guide, you shouldn't feel so guilty to resample your anisotropic images. Yes, sometime, it's just the best thing to do.}.
 
 The user can also choose to use only the nearest neighbors. This method should be used with synthetics images, to avoid introducing new labels for example.
 
-% \url{http://www.itk.org}
-% \code{Insight/Documentation/Style.pdf}
-% \section{Principles of Solar Spot Detection}
-% \cite{ITKSoftwareGuide}.
-% \doxygen{ImageToImageFilter}
+\section{Sample code}
+Here is the code of a simple program which read an image, transform it to an isotropic image and save it.
 
-% \small \begin{verbatim}
-% \end{verbatim} \normalsize
+\small \begin{verbatim}
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
+#include "itkSimpleFilterWatcher.h"
+
+#include "itkIsotropicResolutionImageFilter.h"
 
 
-% The {itemize} environment uses a bullet for each \item.  If you want the 
-% \item's numbered, use the {enumerate} environment instead.
-% \begin{itemize}
-%   \item  Insight Toolkit 2.4.
-%   \item  CMake 2.2
-% \end{itemize}
+int main(int, char * argv[])
+{
+  const int dim = 3;
+  
+  typedef unsigned char PType;
+  typedef itk::Image< PType, dim > IType;
 
-% \ref{cthead1}
+  typedef itk::ImageFileReader< IType > ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( argv[3] );
 
-% \begin{figure}[htbp]
-% \centering
-% \includegraphics{cthead1}
-% \caption{The input image.\label{cthead1}}
-% \end{figure}
+  typedef itk::IsotropicResolutionImageFilter< IType, IType > FilterType;
+  FilterType::Pointer filter = FilterType::New();
+  filter->SetInput( reader->GetOutput() );
+  filter->SetMaximumIncrease( atof(argv[1]) );
+  filter->SetNearestNeighbor( atoi(argv[2]) );
+
+  itk::SimpleFilterWatcher watcher(filter, "filter");
+
+  typedef itk::ImageFileWriter< IType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( filter->GetOutput() );
+  writer->SetFileName( argv[4] );
+  writer->Update();
+
+  return 0;
+}
+\end{verbatim} \normalsize
+
+
+\section{Acknowledgments}
+We thank Dr Pierre Adenot and MIMA2 confocal facilities
+(\url{http://mima2.jouy.inra.fr})
+for providing image samples.
 
 
 \appendix
