@@ -18,8 +18,10 @@
 #define _itkIsotropicResolutionImageFilter_txx
 
 #include "itkResampleImageFilter.h"
-#include <itkLinearInterpolateImageFunction.h>
+#include "itkLinearInterpolateImageFunction.h"
+#include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkProgressAccumulator.h"
+#include "itkRecursiveGaussianImageFilter.h"
 
 namespace itk
 {
@@ -28,7 +30,7 @@ template <class TInputImage, class TOutputImage, class TInterpolatorPrecisionTyp
 IsotropicResolutionImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::IsotropicResolutionImageFilter()
 {
-  m_Interpolator = LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>::New();
+  m_NearestNeighbor = false;
   m_MaximumIncrease = 0;
 }
 
@@ -138,8 +140,10 @@ IsotropicResolutionImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisio
   // Allocate the outputs
   this->AllocateOutputs();
 
-  // input spacing
+//LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>::New();
+  // input spacing and size
   typename InputImageType::SpacingType inputSpacing = this->GetInput()->GetSpacing();
+  typename OutputImageType::SizeType inputSize = this->GetInput()->GetLargestPossibleRegion().GetSize();
   
   // output spacing and size
   typename InputImageType::SpacingType isoSpacing = this->GetOutput()->GetSpacing();
@@ -149,17 +153,64 @@ IsotropicResolutionImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisio
   typename ResampleImageFilter<TInputImage, TOutputImage >::Pointer
     resample = ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>::New();
 
-  resample->SetInput( this->GetInput() );
   resample->ReleaseDataFlagOn();
   resample->SetOutputSpacing( isoSpacing );
   resample->SetSize( outputSize );
-  resample->SetInterpolator( m_Interpolator );
-  
+
+  typedef LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType> LinearInterpolatorType;
+  typename LinearInterpolatorType::Pointer linear = LinearInterpolatorType::New();
+  typedef NearestNeighborInterpolateImageFunction< InputImageType, TInterpolatorPrecisionType > NearestNeighborInterpolatorType;
+  typename NearestNeighborInterpolatorType::Pointer nearest = NearestNeighborInterpolatorType::New();
+
   /** set up the minipipeline */
   typename ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
-  progress->RegisterInternalFilter(resample, 1.0f);
   
+  typedef RecursiveGaussianImageFilter< InputImageType, InputImageType > GaussianType;
+  std::vector< typename GaussianType::Pointer > gaussianList;
+
+  // if m_NearestNeighbor is false, smooth the image when the size decrease
+  if( !m_NearestNeighbor)
+    {
+    for( int axe=0; axe < InputImageDimension; axe++)
+      {
+      if( outputSize[ axe ] < inputSize[ axe ] )
+        {
+        // smooth this axe
+        typename GaussianType::Pointer gaussian = GaussianType::New();
+        int s = gaussianList.size();
+        if( s == 0 )
+          { gaussian->SetInput( this->GetInput() ); }
+        else
+          { gaussian->SetInput( gaussianList[ s-1 ]->GetOutput() ); }
+        gaussian->SetSigma( isoSpacing[ axe ] );
+        gaussian->SetDirection( axe );
+        //gaussian->SetNormalizeAcrossScale( true );
+        gaussian->ReleaseDataFlagOn();
+        // keep the pointer in the list
+        gaussianList.push_back( gaussian );
+        }
+      }
+    int s = gaussianList.size();
+    if( s == 0 )
+      { resample->SetInput( this->GetInput() ); }
+    else
+      { resample->SetInput( gaussianList[ s-1 ]->GetOutput() ); }
+    resample->SetInterpolator( linear );
+    // progress
+    for( int i=0; i<s; i++)
+      {
+      progress->RegisterInternalFilter( gaussianList[ i ], 1.0f/(s+1) );
+      }
+    progress->RegisterInternalFilter( resample, 1.0f/(s+1) );
+    }
+  else
+    {
+    resample->SetInterpolator( nearest );
+    resample->SetInput( this->GetInput() );
+    progress->RegisterInternalFilter( resample, 1.0f );
+    }
+
   resample->GraftOutput( this->GetOutput() );
 
   /** execute the minipipeline */
@@ -179,8 +230,7 @@ IsotropicResolutionImageFilter<TInputImage, TOutputImage, TInterpolatorPrecision
 ::PrintSelf( std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf( os, indent );
-  os << indent << "Interpolator: " << std::endl;
-  m_Interpolator->Print(os, indent.GetNextIndent());
+  os << indent << "NearestNeighbor: " << m_NearestNeighbor << std::endl;
   os << indent << "MaximumIncrease: " << m_MaximumIncrease << std::endl;
 }
 

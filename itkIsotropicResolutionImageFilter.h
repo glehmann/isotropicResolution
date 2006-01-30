@@ -95,20 +95,10 @@ public:
   typedef typename OutputImageType::RegionType OutputImageRegionType;
   typedef typename InputImageType::SizeType InputSizeType;
 
-  /** Interpolator typedef. */
-  typedef InterpolateImageFunction<InputImageType, TInterpolatorPrecisionType> InterpolatorType;
-  typedef typename InterpolatorType::Pointer  InterpolatorPointerType;
-
-  /** Set the interpolator function.  The default is
-   * itk::LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>. Some
-   * other options are itk::NearestNeighborInterpolateImageFunction
-   * (useful for binary masks and other images with a small number of
-   * possible pixel values), and itk::BSplineInterpolateImageFunction
-   * (which provides a higher order of interpolation).  */
-  itkSetObjectMacro( Interpolator, InterpolatorType );
-
-  /** Get a pointer to the interpolator function. */
-  itkGetConstObjectMacro( Interpolator, InterpolatorType );
+  /** */
+  itkSetMacro(NearestNeighbor, bool);
+  itkGetConstReferenceMacro(NearestNeighbor, bool);
+  itkBooleanMacro(NearestNeighbor);
 
   /** Set the maximum increase spacing factor. Default is 0, which means no limit. */
   itkSetMacro(MaximumIncrease, double);
@@ -131,7 +121,7 @@ private:
   IsotropicResolutionImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
   
-  InterpolatorPointerType m_Interpolator; // Image function for interpolation
+  bool m_NearestNeighbor;
   
   double m_MaximumIncrease;
 
