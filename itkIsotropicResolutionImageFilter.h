@@ -57,7 +57,7 @@ namespace itk
  * should be used. In that case, a itk::NearestNeighborInterpolateImageFunction< InputImageType,
  * TInterpolatorPrecisionType > is used internally and no smoothing is done.
  *
- * \author Gaëtan Lehmann. Biologie du Développement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \sa ResampleImageFilter
  */
